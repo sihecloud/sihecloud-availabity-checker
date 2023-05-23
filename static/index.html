@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>思核云网站可用性监控</title>
+    <script src="echarts.min.js"></script>
+    <script src="axios.min.js"></script>
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <h1>思核云集群可用性</h1>
+    <div class="info">
+        数据说明：本网站部署于思核云容器计算SAE服务。后台运行脚本, 每分钟采样一次集群可用性。如果容器挂掉或网络、集群不可用，则采样数不足，该时段的可用性将小于 100%。
+    </div>
+    <div id="internet_connection_heatmap2" class="heatmap2"></div>
+    <div id="internet_connection_heatmap1" class="heatmap1"></div>
+
+    <h1>思核云控制台可用性</h1>
+    <div id="console_heatmap2" class="heatmap2"></div>
+    <div id="console_heatmap1" class="heatmap1"></div>
+
+    <script type="text/javascript">
+        (function () {
+            axios.get("/heatmap/by_date/Internet connection").then((res) => {
+                var series = res.data.series
+                drawHeatMapByDate(document.getElementById('internet_connection_heatmap1'), series)
+            })
+            axios.get("/heatmap/by_date/SIHE Cloud Console").then((res) => {
+                var series = res.data.series
+                drawHeatMapByDate(document.getElementById('console_heatmap1'), series)
+            })
+
+            axios.get("/heatmap/recent/Internet connection").then((res) => {
+                var series = res.data.series
+                var days = res.data.days
+                var hours = res.data.hours
+                drawHeatMapRecent(document.getElementById('internet_connection_heatmap2'), days, hours, series)
+            })
+
+            axios.get("/heatmap/recent/SIHE Cloud Console").then((res) => {
+                var series = res.data.series
+                var days = res.data.days
+                var hours = res.data.hours
+                drawHeatMapRecent(document.getElementById('console_heatmap2'), days, hours, series)
+            })
+
+        })();
+
+    </script>
+
+    <style>
+        .heatmap1 {
+            width: 1400px;
+            height: 300px;
+        }
+
+        .heatmap2 {
+            width: 1400px;
+            height: 400px;
+            margin-top: 50px;
+        }
+</style>
+</body>
