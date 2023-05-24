@@ -24,7 +24,6 @@ def check_item(item_key):
 def check_and_log(item_key):
     assert item_key in items
     result = check_item(item_key)
-    print(f"Check result for {item_key}: {result}")
     if result:
         with open(f"data/{item_key}.txt", "a") as f:
             f.write(str(time.time()))

@@ -37,15 +37,19 @@ def startWebServer():
     @app.route('/heatmap/by_date/<item_key>', methods=['GET'])
     def get_heat_map_by_date(item_key):
         ts_list = checker.read_log(item_key)
+        print(ts_list)
+        # reduce into 5min buckets
+        ts_list = list(set([x // 300 * 300 for x in ts_list]))
+        print(ts_list)
         date_map = {}
         for ts in ts_list:
             date = ts_to_date_str(ts, '%Y-%m-%d')
             if date not in date_map:
                 date_map[date] = 0
             date_map[date] += 1
-        # assume that check for every minute.    
+        # assume that check for every 5 minutes.
         return {
-            "series": [(date, value / 60 / 24 * 100) for date, value in date_map.items()]
+            "series": [(date, value / 12 / 24 * 100) for date, value in date_map.items()]
         }
 
     @app.route('/heatmap/recent/<item_key>', methods=['GET'])
@@ -66,6 +70,9 @@ def startWebServer():
 
 
         ts_list = checker.read_log(item_key)
+        # reduce into 5min buckets
+        ts_list = list(set([x // 300 * 300 for x in ts_list]))
+
         ts_list = [ x for x in ts_list if x >= threshold_ts]
         date_hour_map = {}
         for ts in ts_list:
@@ -76,8 +83,8 @@ def startWebServer():
 
         series = []
         for date_hour, value in date_hour_map.items():
-            # assume that check for every minute.    
-            pct = value / 60 * 100
+            # assume that check for every 5 minutes.
+            pct = value / 12 * 100
             date, hour = date_hour.split(" ")
             series.append((hours.index(hour), days.index(date), pct))
 
