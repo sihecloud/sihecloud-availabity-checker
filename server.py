@@ -100,7 +100,7 @@ def startWebServer():
 
 if __name__ == '__main__':
     t = threading.Thread(target=startWebServer, args=tuple())
-    t.setDaemon(True)
+    t.daemon = True
     t.start()
 
     schedule.every(1).minutes.do(do_check)
