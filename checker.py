@@ -1,6 +1,8 @@
 import os
 import time
 import requests
+from logger import my_logger
+import traceback
 
 timeout = (10, 10)
 
@@ -11,6 +13,7 @@ items = {
 
 os.makedirs("data", exist_ok=True)
 
+
 def check_item(item_key):
     assert item_key in items
     url = items[item_key]
@@ -18,12 +21,14 @@ def check_item(item_key):
         response = requests.get(url, timeout=timeout)
         return response.status_code == 200
     except Exception as e:
-        print(e)
+        my_logger.error(e)
+        my_logger.error(traceback.format_exc())
         return False
 
 def check_and_log(item_key):
     assert item_key in items
     result = check_item(item_key)
+    my_logger.info(f"Check result for {item_key} = {result}")
     if result:
         with open(f"data/{item_key}.txt", "a") as f:
             f.write(str(time.time()))
