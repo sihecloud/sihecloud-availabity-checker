@@ -37,10 +37,8 @@ def startWebServer():
     @app.route('/heatmap/by_date/<item_key>', methods=['GET'])
     def get_heat_map_by_date(item_key):
         ts_list = checker.read_log(item_key)
-        print(ts_list)
         # reduce into 5min buckets
         ts_list = list(set([x // 300 * 300 for x in ts_list]))
-        print(ts_list)
         date_map = {}
         for ts in ts_list:
             date = ts_to_date_str(ts, '%Y-%m-%d')
@@ -60,8 +58,9 @@ def startWebServer():
         last_week = now - timedelta(days=N_DAYS)
 
         # 设置时间为0时0分0秒
-        begin_date = datetime(last_week.year, last_week.month, last_week.day, 0, 0, 0, tzinfo=pytz.timezone('Asia/Shanghai'))
-        threshold_ts = int(begin_date.timestamp())
+        begin_date = datetime(last_week.year, last_week.month, last_week.day, 0, 0, 0)
+        threshold_ts = int(pytz.timezone('Asia/Shanghai').localize(begin_date).timestamp())
+        print(f"threshold_ts: {threshold_ts}")
 
         days = [
             (now - timedelta(days=x)).strftime('%Y-%m-%d') for x in range(N_DAYS, -1, -1)
