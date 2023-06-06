@@ -60,7 +60,7 @@ def startWebServer():
         last_week = now - timedelta(days=N_DAYS)
 
         # 设置时间为0时0分0秒
-        begin_date = datetime(last_week.year, last_week.month, last_week.day, 0, 0, 0)
+        begin_date = datetime(last_week.year, last_week.month, last_week.day, 0, 0, 0, tzinfo=pytz.timezone('Asia/Shanghai'))
         threshold_ts = int(begin_date.timestamp())
 
         days = [
