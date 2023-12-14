@@ -37,9 +37,15 @@ def check_and_log(item_key):
 def read_log(item_key):
     assert item_key in items
     filepath = f"data/{item_key}.txt"
+    result = []
     if os.path.exists(filepath):
         with open(filepath, 'r') as f:
-            return [float(x.strip()) for x in f]
+            for line in f:
+                try:
+                    float_value = float(line.strip())
+                    float_list.append(float_value)
+                except ValueError:
+                    pass
     return []
 
 
