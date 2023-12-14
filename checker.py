@@ -33,7 +33,7 @@ def check_and_log(item_key):
         with open(f"data/{item_key}.txt", "a") as f:
             f.write(str(time.time()))
             f.write("\n")
-            
+
 def read_log(item_key):
     assert item_key in items
     filepath = f"data/{item_key}.txt"
@@ -43,10 +43,10 @@ def read_log(item_key):
             for line in f:
                 try:
                     float_value = float(line.strip())
-                    float_list.append(float_value)
+                    result.append(float_value)
                 except ValueError:
                     pass
-    return []
+    return result
 
 
 
