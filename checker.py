@@ -9,6 +9,7 @@ timeout = (10, 10)
 items = {
     'Internet connection': "https://www.baidu.com/",
     'SIHE Cloud Console': "https://mono-backend.sihe.cloud/api/test",
+    'SIHE NAS RW': "",
 }
 
 os.makedirs("data", exist_ok=True)
@@ -16,6 +17,19 @@ os.makedirs("data", exist_ok=True)
 
 def check_item(item_key):
     assert item_key in items
+
+    if item_key == "SIHE NAS RW":
+        filepath = f"data/{item_key}_tmp.txt"
+        with open(filepath, "w") as f:
+            try:
+                f.write("test")
+                os.remove(filepath)
+                return True
+            except Exception as e:
+                my_logger.error(e)
+                my_logger.error(traceback.format_exc())
+                return False
+
     url = items[item_key]
     try:
         response = requests.get(url, timeout=timeout)

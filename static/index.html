@@ -24,15 +24,25 @@
     <div id="console_heatmap2" class="heatmap2"></div>
     <div id="console_heatmap1" class="heatmap1"></div>
 
+    <h1>思核云文件存储读写可用性</h1>
+    <div id="nas_heatmap2" class="heatmap2"></div>
+    <div id="nas_heatmap1" class="heatmap1"></div>
+
     <script type="text/javascript">
         (function () {
             axios.get("/heatmap/by_date/Internet connection").then((res) => {
                 var series = res.data.series
                 drawHeatMapByDate(document.getElementById('internet_connection_heatmap1'), series)
             })
+
             axios.get("/heatmap/by_date/SIHE Cloud Console").then((res) => {
                 var series = res.data.series
                 drawHeatMapByDate(document.getElementById('console_heatmap1'), series)
+            })
+
+            axios.get("/heatmap/by_date/SIHE NAS RW").then((res) => {
+                var series = res.data.series
+                drawHeatMapByDate(document.getElementById('nas_heatmap1'), series)
             })
 
             axios.get("/heatmap/recent/Internet connection").then((res) => {
@@ -49,6 +59,12 @@
                 drawHeatMapRecent(document.getElementById('console_heatmap2'), days, hours, series)
             })
 
+            axios.get("/heatmap/recent/SIHE NAS RW").then((res) => {
+                var series = res.data.series
+                var days = res.data.days
+                var hours = res.data.hours
+                drawHeatMapRecent(document.getElementById('nas_heatmap2'), days, hours, series)
+            })
         })();
 
     </script>
